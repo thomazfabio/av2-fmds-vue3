@@ -2,8 +2,12 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer">
       <!--  -->
+      <v-row style="height: 100%;">
+        <v-col align-self="end" class="pl-5 pr-5">
+          <v-btn @click="Logout" color="warning" block>Logout</v-btn>
+        </v-col>
+      </v-row>
     </v-navigation-drawer>
-
     <v-app-bar :height="50">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
@@ -18,10 +22,19 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+import { ref } from 'vue'
+import { getAuth, signOut } from "firebase/auth";
 
-  const drawer = ref(false)
+const drawer = ref(false)
+const Logout = () => {
+  const auth = getAuth();
+  signOut(auth).then(() => {
+    // Sign-out successful.
+    console.log('Sign-out successful.')
+  }).catch((error) => {
+    // An error happened.
+  });
+}
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

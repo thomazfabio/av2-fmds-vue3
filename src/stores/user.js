@@ -7,7 +7,7 @@ import router from '@/router'
 export const useUserStore = defineStore('user', {
     state: () => ({
         email: "",
-        accessToken: "",
+        accessToken: null,
     }),
 
     getters: {
@@ -32,7 +32,6 @@ export const useUserStore = defineStore('user', {
         },
         async login(user) {
             // Login the user
-            console.log(user);
             const auth = getAuth();
             signInWithEmailAndPassword(auth, user.email, user.password)
                 .then((userCredential) => {
@@ -45,8 +44,8 @@ export const useUserStore = defineStore('user', {
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
+                    console.log(errorCode);
                 });
-            console.log("Login");
         },
     },
 })
