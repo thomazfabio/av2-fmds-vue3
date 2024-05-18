@@ -22,3 +22,6 @@
 
   const drawer = ref(false)
 </script>
+
+<style scoped>
+</style>
