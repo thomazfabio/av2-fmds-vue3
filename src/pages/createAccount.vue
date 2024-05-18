@@ -1,7 +1,8 @@
 <template>
     <v-container class="d-flex justify-center align-center" style="width: 100%; height: 100%; background-color: #79a0e9;"
         fluid>
-        <v-row style="max-width: 600px;">
+        <v-row style="max-width: 400px;">
+            <v-space />
             <v-col cols="12">
                 <v-card elevation="8">
                     <v-card-title>
@@ -21,9 +22,23 @@
                                 :type="visible ? 'text' : 'password'" density="compact" placeholder="Confirme sua senha"
                                 prepend-inner-icon="mdi-lock-outline" variant="outlined"
                                 @click:append-inner="visible = !visible"></v-text-field>
-                            <v-btn color="success">Criar conta</v-btn>
+                            <v-row>
+                                <v-col>
+                                    <v-btn color="primary" block>Cadastrar</v-btn>
+                                </v-col>
+                            </v-row>
+
                         </v-form>
                     </v-card-text>
+                    <v-card-actions>
+                        
+                        <v-btn text color="primary">Já tenho uma conta</v-btn>
+                        <v-spacer/>
+                        <RouterLink to="/">
+                            <v-btn text color="primary">Home</v-btn>
+                        </RouterLink>
+                       
+                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
