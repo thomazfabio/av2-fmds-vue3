@@ -8,11 +8,11 @@
                     </v-card-title>
                     <v-card-text>
                         <v-form>
-                            <v-text-field label="Nome" density="compact" variant="outlined"
+                            <v-text-field v-model="user.name" label="Nome" density="compact" variant="outlined"
                                 placeholder="Seu nome"></v-text-field>
-                            <v-text-field label="Email" variant="outlined" prepend-inner-icon="mdi-email-outline"
+                            <v-text-field v-model="user.email" label="Email" variant="outlined" prepend-inner-icon="mdi-email-outline"
                                 density="compact" placeholder="Seu e-mail"></v-text-field>
-                            <v-text-field label="Senha" :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                            <v-text-field v-model="user.password" label="Senha" :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                                 :type="visible ? 'text' : 'password'" density="compact" placeholder="Sua senha"
                                 prepend-inner-icon="mdi-lock-outline" variant="outlined"
                                 @click:append-inner="visible = !visible"></v-text-field>
@@ -23,7 +23,7 @@
                                 @click:append-inner="visible = !visible"></v-text-field>
                             <v-row>
                                 <v-col>
-                                    <v-btn color="primary" block>Cadastrar</v-btn>
+                                    <v-btn @click="add" color="primary" block>Cadastrar</v-btn>
                                 </v-col>
                             </v-row>
 
@@ -48,6 +48,15 @@
 
 <script setup>
 import { ref } from 'vue'
-
+import { useUserStore } from '@/stores/user'
+const user = ref({
+    name: '',
+    email: '',
+    password: '',
+})
+const userStore = useUserStore()
+const add = () => {
+    userStore.register(user.value)
+}
 const visible = ref(false)
 </script>
