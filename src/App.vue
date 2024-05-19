@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer">
       <!--  -->
       <v-row style="height: 50%;">
-     
+
       </v-row>
       <v-row style="height: 50%;">
         <v-col align-self="end" class="pl-5 pr-5">
@@ -14,7 +14,7 @@
     <v-app-bar :height="50">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-app-bar-title>Application</v-app-bar-title>
+      <v-app-bar-title>Tarefas pessoais</v-app-bar-title>
     </v-app-bar>
 
     <v-main>
@@ -27,6 +27,10 @@
 <script setup>
 import { ref } from 'vue'
 import { getAuth, signOut } from "firebase/auth";
+import { useUserStore } from '@/stores/user'
+const userStore = useUserStore()
+const isLogged = userStore.isLogged
+
 
 const drawer = ref(false)
 const Logout = () => {

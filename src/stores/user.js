@@ -24,13 +24,14 @@ export const useUserStore = defineStore('user', {
     },
     actions: {
 
-        loginpersist(user) {
+        async loginpersist(user) {
             const auth = getAuth();
             console.log(user);
             if (user) {
                 this.accessToken = user.accessToken;
                 this.email = user.email;
                 this.name = user.displayName;
+                this.userId = user.uid;
             }
         },
         register(user) {
