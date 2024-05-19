@@ -2,7 +2,10 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer">
       <!--  -->
-      <v-row style="height: 100%;">
+      <v-row style="height: 50%;">
+     
+      </v-row>
+      <v-row style="height: 50%;">
         <v-col align-self="end" class="pl-5 pr-5">
           <v-btn @click="Logout" color="warning" block>Logout</v-btn>
         </v-col>

@@ -13,6 +13,11 @@
                             <v-btn block color="primary">Login</v-btn>
                         </RouterLink>
                     </v-col>
+                    <v-col cols="12">
+                        <RouterLink to="/dashboard" class="text-decoration-none">
+                            <v-btn block color="primary">dasboard</v-btn>
+                        </RouterLink>
+                    </v-col>
                 </v-card>
             </v-col>
         </v-row>

@@ -1,28 +1,55 @@
 import { defineStore } from 'pinia'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import router from '@/router'
-
-
 
 export const useUserStore = defineStore('user', {
     state: () => ({
+        name: "Fabio",
         email: "",
+        userId: null,
         accessToken: null,
     }),
 
     getters: {
-        //
+        isLogged: (state) => !!state.accessToken,
+
+        getUserProfile: (state) => {
+            return {
+                name: state.name,
+                email: state.email,
+                accessToken: state.accessToken,
+                userId: state.userId,
+            };
+        }
     },
     actions: {
-        async register(user) {
+
+        loginpersist(user) {
+            const auth = getAuth();
+            console.log(user);
+            if (user) {
+                this.accessToken = user.accessToken;
+                this.email = user.email;
+                this.name = user.displayName;
+            }
+        },
+        register(user) {
             // Register the user
             const auth = getAuth();
             createUserWithEmailAndPassword(auth, user.email, user.password).then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                console.log(user);
-                console.log("User registered");
-                router.push("/login");
+                this.accessToken = user.accessToken;
+                this.email = user.email;
+            }).then(() => {
+                updateProfile(auth.currentUser, {
+                    displayName: user.name,
+                }).then(() => {
+                    // Profile updated!
+                    router.push('/login');
+                }).catch((error) => {
+                    console.log(error);
+                });
             }).catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
@@ -30,22 +57,24 @@ export const useUserStore = defineStore('user', {
                 console.log(errorMessage);
             });
         },
-        async login(user) {
+         login(user) {
             // Login the user
             const auth = getAuth();
-            signInWithEmailAndPassword(auth, user.email, user.password)
-                .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
-                    // ...
-                    this.accessToken = user.accessToken;
-                    console.log(this.accessToken);
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode);
-                });
+            const userCredential = signInWithEmailAndPassword(auth, user.email, user.password).then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                this.accessToken = user.accessToken;
+                this.email = user.email;
+                this.name = user.displayName;
+                this.userId = user.uid;
+            }).then(() => {
+                router.push('/dashboard');
+            }).catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode);
+                console.log(errorMessage);
+            });
         },
     },
 })
