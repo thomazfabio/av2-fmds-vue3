@@ -11,7 +11,7 @@ export const useUserStore = defineStore('user', {
     }),
 
     getters: {
-        isLogged: (state) => !!state.accessToken,
+        isLogged:  (state) => !!state.accessToken,
 
         getUserProfile: (state) => {
             return {
@@ -24,8 +24,7 @@ export const useUserStore = defineStore('user', {
     },
     actions: {
 
-        async loginpersist(user) {
-            const auth = getAuth();
+         loginpersist(user) {
             console.log(user);
             if (user) {
                 this.accessToken = user.accessToken;

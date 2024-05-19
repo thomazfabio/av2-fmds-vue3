@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer">
+    <v-navigation-drawer v-model="drawer" v-if="islogged">
       <!--  -->
       <v-row style="height: 50%;">
 
@@ -12,7 +12,7 @@
       </v-row>
     </v-navigation-drawer>
     <v-app-bar :height="50">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="islogged"></v-app-bar-nav-icon>
 
       <v-app-bar-title>Tarefas pessoais</v-app-bar-title>
     </v-app-bar>
@@ -28,9 +28,14 @@
 import { ref } from 'vue'
 import { getAuth, signOut } from "firebase/auth";
 import { useUserStore } from '@/stores/user'
+import router from './router';
 const userStore = useUserStore()
-const isLogged = userStore.isLogged
+const islogged = ref(userStore.isLogged)
 
+// Observe mudanças no store e atualize islogged
+watch(() => userStore.isLogged, (newVal) => {
+  islogged.value = newVal
+})
 
 const drawer = ref(false)
 const Logout = () => {
@@ -38,6 +43,7 @@ const Logout = () => {
   signOut(auth).then(() => {
     // Sign-out successful.
     console.log('Sign-out successful.')
+    router.push('/login')
   }).catch((error) => {
     // An error happened.
   });
