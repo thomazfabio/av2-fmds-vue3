@@ -11,7 +11,7 @@ export const useUserStore = defineStore('user', {
     }),
 
     getters: {
-        isLogged:  (state) => !!state.accessToken,
+        isLogged: (state) => !!state.accessToken,
 
         getUserProfile: (state) => {
             return {
@@ -24,7 +24,7 @@ export const useUserStore = defineStore('user', {
     },
     actions: {
 
-         loginpersist(user) {
+        loginpersist(user) {
             console.log(user);
             if (user) {
                 this.accessToken = user.accessToken;
@@ -57,10 +57,10 @@ export const useUserStore = defineStore('user', {
                 console.log(errorMessage);
             });
         },
-         login(user) {
+        async login(user) {
             // Login the user
             const auth = getAuth();
-            const userCredential = signInWithEmailAndPassword(auth, user.email, user.password).then((userCredential) => {
+            await signInWithEmailAndPassword(auth, user.email, user.password).then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
                 this.accessToken = user.accessToken;
@@ -76,5 +76,15 @@ export const useUserStore = defineStore('user', {
                 console.log(errorMessage);
             });
         },
+        async logoutFirebase() {
+            // Logout the user
+            const auth = getAuth();
+            await auth.signOut();
+            this.accessToken = null;
+            this.email = "";
+            this.name = "";
+            this.userId = null;
+            router.push('/login');
+        }
     },
 })

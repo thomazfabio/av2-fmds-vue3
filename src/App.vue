@@ -38,16 +38,8 @@ watch(() => userStore.isLogged, (newVal) => {
 })
 
 const drawer = ref(false)
-const Logout = () => {
-  const auth = getAuth();
-  signOut(auth).then(() => {
-    // Sign-out successful.
-    console.log('Sign-out successful.')
-    router.push('/login')
-  }).catch((error) => {
-    // An error happened.
-  });
-}
+const Logout = userStore.logoutFirebase
+
 </script>
 
 <style scoped></style>
