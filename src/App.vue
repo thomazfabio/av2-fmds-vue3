@@ -26,16 +26,17 @@
 
 <script setup>
 import { ref } from 'vue'
-import { getAuth, signOut } from "firebase/auth";
 import { useUserStore } from '@/stores/user'
-import router from './router';
+import { watch } from 'vue';
 const userStore = useUserStore()
-const islogged = ref(userStore.isLogged)
+
+const islogged = ref(userStore.getIsLogged)
 
 // Observe mudanças no store e atualize islogged
-watch(() => userStore.isLogged, (newVal) => {
+watch(() => userStore.getIsLogged, (newVal) => {
   islogged.value = newVal
 })
+
 
 const drawer = ref(false)
 const Logout = userStore.logoutFirebase

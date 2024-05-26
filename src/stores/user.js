@@ -1,46 +1,50 @@
 import { defineStore } from 'pinia'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from "firebase/auth";
 import router from '@/router'
+import { ref } from 'vue';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
-        name: "Fabio",
-        email: "",
-        userId: null,
-        accessToken: null,
+        user: null,
     }),
 
     getters: {
-        isLogged: (state) => !!state.accessToken,
+        getIsLogged: (state) => {
+            return !!state.user;
+        },
 
         getUserProfile: (state) => {
             return {
-                name: state.name,
-                email: state.email,
-                accessToken: state.accessToken,
-                userId: state.userId,
-            };
+                name: state.user.displayName,
+                email: state.user.email,
+                photo: state.user.photoURL,
+                id: state.user.uid,
+                accessToken: state.user.accessToken
+            }
         }
     },
     actions: {
-
-        loginpersist(user) {
-            console.log(user);
-            if (user) {
-                this.accessToken = user.accessToken;
-                this.email = user.email;
-                this.name = user.displayName;
-                this.userId = user.uid;
-            }
+        checkAuth() {
+            return new Promise((resolve, reject) => {
+                const auth = getAuth();
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        this.user = await user;
+                        resolve(true)
+                    } else {
+                        resolve(false)
+                    }
+                });
+            })
         },
+
         register(user) {
             // Register the user
             const auth = getAuth();
             createUserWithEmailAndPassword(auth, user.email, user.password).then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                this.accessToken = user.accessToken;
-                this.email = user.email;
+                this.user = user;
             }).then(() => {
                 updateProfile(auth.currentUser, {
                     displayName: user.name,
@@ -63,10 +67,7 @@ export const useUserStore = defineStore('user', {
             await signInWithEmailAndPassword(auth, user.email, user.password).then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                this.accessToken = user.accessToken;
-                this.email = user.email;
-                this.name = user.displayName;
-                this.userId = user.uid;
+                this.user = user;
             }).then(() => {
                 router.push('/dashboard');
             }).catch((error) => {
@@ -80,10 +81,7 @@ export const useUserStore = defineStore('user', {
             // Logout the user
             const auth = getAuth();
             await auth.signOut();
-            this.accessToken = null;
-            this.email = "";
-            this.name = "";
-            this.userId = null;
+            this.user = null;
             router.push('/login');
         }
     },

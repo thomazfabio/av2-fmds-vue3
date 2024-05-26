@@ -7,7 +7,7 @@
         </v-card-text>
         <v-card-title class="pt-0"> {{ user.name }}</v-card-title>
         <v-card-subtitle>{{ user.email }}</v-card-subtitle>
-        <v-card-subtitle>Id: {{ user.userId }}</v-card-subtitle>
+        <v-card-subtitle>Id: {{ user.accessToken }}</v-card-subtitle>
         <v-card-actions>
             <v-btn text color="primary">Editar</v-btn>
             <v-spacer></v-spacer>
