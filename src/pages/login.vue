@@ -16,7 +16,7 @@
                                 @click:append-inner="visible = !visible"></v-text-field>
                             <v-row>
                                 <v-col>
-                                    <v-btn @click="login" color="primary" block>Entrar</v-btn>
+                                    <v-btn @click="login" color="warning" block>Entrar</v-btn>
                                 </v-col>
                             </v-row>
 
