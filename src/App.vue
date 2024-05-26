@@ -2,24 +2,34 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" v-if="islogged">
       <!--  -->
-      <v-container style="height: 50%;">
-        <v-switch class="d-flex align-center justify-start mr-4" true-value="Dark" false-value="Light" color="purple"
-          :label="`Tema: ${switchTheme.toString()}`" v-model="switchTheme"></v-switch>
-        <v-btn color="primary" block>
-          <v-icon>mdi-home</v-icon>
-          <span>Perfil</span>
-        </v-btn>
-        
-        <v-btn color="primary" block>
-          <v-icon>mdi-work</v-icon>
-          <span>Tarefas</span>
-        </v-btn>
-      </v-container>
-      <v-container class="d-flex" style="height: 50%;">
-        <v-col align-self="end">
-          <v-btn @click="Logout" color="red-darken-1" block>Logout</v-btn>
+      <v-row>
+        <v-col>
+          <infoUser prop1="text" />
         </v-col>
-      </v-container>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-card class="mt-4" variant="text" rounded="0">
+            <v-col>
+              <v-row>
+                <v-col cols="6">
+                  <v-btn @click="switchTheme = 'Dark'" block color="blue-grey-darken-4" prepend-icon="mdi-weather-night"
+                    variant="flat">Dark</v-btn>
+                </v-col>
+                <v-col cols="6">
+                  <v-btn @click="switchTheme = 'Light'" block color="yellow" prepend-icon="mdi-lightbulb-on-outline"
+                    variant="flat">Light</v-btn>
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col>
+              <v-btn @click="Logout" color="red-darken-1" block prepend-icon="mdi-logout">Sair</v-btn>
+            </v-col>
+          </v-card>
+        </v-col>
+
+      </v-row>
+
     </v-navigation-drawer>
     <v-app-bar :height="50">
       <v-app-bar-nav-icon @click="drawer = !drawer" v-if="islogged"></v-app-bar-nav-icon>
@@ -42,12 +52,11 @@ import { watch } from 'vue';
 import { useTheme } from 'vuetify'
 const userStore = useUserStore()
 
-const islogged = ref(userStore.getIsLogged)
-
-// Observe mudanças no store e atualize islogged
-watch(() => userStore.getIsLogged, (newVal) => {
-  islogged.value = newVal
+const islogged = computed(() => {
+  return userStore.getIsLogged
 })
+
+
 const drawer = ref(false)
 const Logout = userStore.logoutFirebase
 

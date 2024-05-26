@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <infoUser />
+        <infoUser prop1="elevated"/>
     </v-container>
 
 </template>

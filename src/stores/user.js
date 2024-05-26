@@ -4,6 +4,7 @@ import router from '@/router'
 import { ref } from 'vue';
 
 
+
 export const useUserStore = defineStore('user', {
     state: () => ({
         user: null,
@@ -16,13 +17,16 @@ export const useUserStore = defineStore('user', {
         },
 
         getUserProfile: (state) => {
+            if (!state.user) {
+                return null; // ou um objeto vazio ou padrão
+            }
             return {
                 name: state.user.displayName,
                 email: state.user.email,
                 photo: state.user.photoURL,
                 id: state.user.uid,
                 accessToken: state.user.accessToken
-            }
+            };
         },
         getUserAlert: (state) => {
             return state.userAlert;
@@ -34,6 +38,7 @@ export const useUserStore = defineStore('user', {
                 const auth = getAuth();
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
+                        console.log('User is signed in');
                         this.user = await user;
                         resolve(true)
                     } else {
@@ -43,19 +48,20 @@ export const useUserStore = defineStore('user', {
             })
         },
 
-        register(user) {
+        async register(user) {
             // Register the user
             const auth = getAuth();
             createUserWithEmailAndPassword(auth, user.email, user.password).then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                this.user = user;
+
             }).then(() => {
                 updateProfile(auth.currentUser, {
                     displayName: user.name,
-                }).then(() => {
+                }).then(async () => {
                     // Profile updated!
-                    router.push('/login');
+                    this.user = await  auth.currentUser;
+                    router.push('/dashboard');
                 }).catch((error) => {
                     console.log(error);
                 });
