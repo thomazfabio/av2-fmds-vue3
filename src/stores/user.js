@@ -3,9 +3,11 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, up
 import router from '@/router'
 import { ref } from 'vue';
 
+
 export const useUserStore = defineStore('user', {
     state: () => ({
         user: null,
+        userAlert: { status: false, message: '' },
     }),
 
     getters: {
@@ -21,7 +23,10 @@ export const useUserStore = defineStore('user', {
                 id: state.user.uid,
                 accessToken: state.user.accessToken
             }
-        }
+        },
+        getUserAlert: (state) => {
+            return state.userAlert;
+        },
     },
     actions: {
         checkAuth() {
@@ -73,6 +78,7 @@ export const useUserStore = defineStore('user', {
             }).catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                this.userAlert = { status: true, message: errorMessage }
                 console.log(errorCode);
                 console.log(errorMessage);
             });
@@ -83,6 +89,9 @@ export const useUserStore = defineStore('user', {
             await auth.signOut();
             this.user = null;
             router.push('/login');
+        },
+        async clearAlert() {
+            this.userAlert = { status: false, message: '' };
         }
     },
 })

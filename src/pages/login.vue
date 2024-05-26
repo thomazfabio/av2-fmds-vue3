@@ -7,6 +7,7 @@
                         Login
                     </v-card-title>
                     <v-card-text>
+                        <v-alert variant="outlined" class="mb-5" closable v-model="alert.status" type="error" dense>{{ alert.message }}</v-alert>
                         <v-form>
                             <v-text-field v-model="user.email" label="Email" variant="outlined" prepend-inner-icon="mdi-email-outline"
                                 density="compact" placeholder="Seu e-mail"></v-text-field>
@@ -16,7 +17,7 @@
                                 @click:append-inner="visible = !visible"></v-text-field>
                             <v-row>
                                 <v-col>
-                                    <v-btn @click="login" color="warning" block>Entrar</v-btn>
+                                    <v-btn @click="login" color="primary" block>Entrar</v-btn>
                                 </v-col>
                             </v-row>
 
@@ -42,15 +43,28 @@
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router';
 import { useUserStore } from '@/stores/user'
+import { computed } from 'vue';
+import { onUnmounted } from 'vue';
+const userStore = useUserStore()
 
 const user = ref({
     email: '',
     password: '',
 })
-const userStore = useUserStore()
+
+
+const alert = computed(() => {
+    return userStore.getUserAlert
+})
+
 const login = () => {
     userStore.login(user.value)
 }
+
+//hooks
+onUnmounted(() => {
+    userStore.clearAlert()
+})
 
 const visible = ref(false)
 </script>
